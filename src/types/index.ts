@@ -50,3 +50,10 @@ export interface DashboardStats {
   occupancyRate: number;
   releasingThisMonth: number;
 }
+
+export interface ActivityItem {
+  id: string;
+  description: string;
+  type: 'admission' | 'transfer' | 'release' | 'visit' | 'incident';
+  timestamp: string;
+}

@@ -299,7 +299,7 @@ const PrisonerForm = ({ prisoner, cells, onSubmit, onCancel }: PrisonerFormProps
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="">Not Assigned</SelectItem>
+                    <SelectItem value="none">Not Assigned</SelectItem>
                     {cells.map((cell) => (
                       <SelectItem key={cell.id} value={cell.id}>
                         {`${cell.block}-${cell.cell_number}`}
