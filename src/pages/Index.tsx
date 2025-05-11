@@ -1,75 +1,82 @@
 
-import { Users, Lock, AlertCircle, Clock } from "lucide-react";
-import StatsCard from "@/components/dashboard/StatsCard";
-import { DashboardStats } from "@/types";
+import { Users, Lock, ClipboardCheck, UserCheck } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Index = () => {
-  // Mock data - in a real application, this would come from an API
-  const stats: DashboardStats = {
-    totalPrisoners: 245,
-    totalCapacity: 300,
-    occupancyRate: 81.7,
-    releasingThisMonth: 12
-  };
-
   return (
-    <div className="page-container">
-      <h1 className="page-title">Prison Management System</h1>
-      <p className="text-muted-foreground mb-6">Welcome to the prison management system</p>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <StatsCard 
-          title="Total Prisoners" 
-          value={stats.totalPrisoners} 
-          icon={Users}
-          description="Currently incarcerated" 
-        />
-        <StatsCard 
-          title="Facility Capacity" 
-          value={stats.totalCapacity}
-          icon={Lock}
-          description="Maximum capacity" 
-        />
-        <StatsCard 
-          title="Occupancy Rate" 
-          value={`${stats.occupancyRate}%`}
-          icon={AlertCircle}
-        />
-        <StatsCard 
-          title="Releasing This Month" 
-          value={stats.releasingThisMonth}
-          icon={Clock}
-        />
+    <div className="page-container max-w-5xl mx-auto py-8">
+      <div className="text-center mb-12">
+        <h1 className="text-3xl font-bold tracking-tight">Prison Management System</h1>
+        <p className="text-muted-foreground mt-2">A comprehensive solution for prison administration</p>
       </div>
-
-      <div className="mt-8 bg-white p-6 rounded-lg border shadow-sm">
-        <h2 className="text-xl font-semibold mb-4">Quick Navigation</h2>
-        <p className="text-muted-foreground mb-4">
-          Use the navigation menu above to manage prisoners, cells, and staff records.
-        </p>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="p-4 border rounded-lg bg-accent/20 hover:bg-accent/30 transition-colors">
-            <h3 className="font-medium flex items-center gap-2">
-              <Users className="h-5 w-5 text-primary" />
-              Prisoners
-            </h3>
-            <p className="text-sm text-muted-foreground mt-1">Manage prisoner records and assignments</p>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Prisoners Module */}
+        <Link to="/prisoners" className="block group">
+          <div className="border rounded-lg p-6 h-full bg-white hover:border-primary transition-colors">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="bg-primary/10 p-3 rounded-full">
+                <Users className="h-6 w-6 text-primary" />
+              </div>
+              <h2 className="text-xl font-semibold group-hover:text-primary transition-colors">Prisoner Management</h2>
+            </div>
+            <p className="text-muted-foreground">
+              Register, update, and track prisoner records. View prisoner details, their 
+              assigned cells, sentences, and release dates.
+            </p>
           </div>
-          <div className="p-4 border rounded-lg bg-accent/20 hover:bg-accent/30 transition-colors">
-            <h3 className="font-medium flex items-center gap-2">
-              <Lock className="h-5 w-5 text-primary" />
-              Cells
-            </h3>
-            <p className="text-sm text-muted-foreground mt-1">Manage cell blocks and assignments</p>
+        </Link>
+        
+        {/* Cells Module */}
+        <Link to="/cells" className="block group">
+          <div className="border rounded-lg p-6 h-full bg-white hover:border-primary transition-colors">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="bg-primary/10 p-3 rounded-full">
+                <Lock className="h-6 w-6 text-primary" />
+              </div>
+              <h2 className="text-xl font-semibold group-hover:text-primary transition-colors">Cell Management</h2>
+            </div>
+            <p className="text-muted-foreground">
+              Monitor cell blocks and occupancy. Assign prisoners to cells and 
+              track capacity across different security levels.
+            </p>
           </div>
-          <div className="p-4 border rounded-lg bg-accent/20 hover:bg-accent/30 transition-colors">
-            <h3 className="font-medium flex items-center gap-2">
-              <Users className="h-5 w-5 text-primary" />
-              Staff
-            </h3>
-            <p className="text-sm text-muted-foreground mt-1">Manage staff members and schedules</p>
+        </Link>
+        
+        {/* Staff Module */}
+        <Link to="/staff" className="block group">
+          <div className="border rounded-lg p-6 h-full bg-white hover:border-primary transition-colors">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="bg-primary/10 p-3 rounded-full">
+                <UserCheck className="h-6 w-6 text-primary" />
+              </div>
+              <h2 className="text-xl font-semibold group-hover:text-primary transition-colors">Staff Management</h2>
+            </div>
+            <p className="text-muted-foreground">
+              Maintain records of prison staff including guards, medical personnel, 
+              and administrative staff. Manage shifts and departments.
+            </p>
           </div>
+        </Link>
+        
+        {/* Visitors Module - Placeholder for future implementation */}
+        <div className="border rounded-lg p-6 h-full bg-white opacity-70">
+          <div className="flex items-center gap-4 mb-4">
+            <div className="bg-muted p-3 rounded-full">
+              <ClipboardCheck className="h-6 w-6 text-muted-foreground" />
+            </div>
+            <h2 className="text-xl font-semibold text-muted-foreground">Visitor & Parole Records</h2>
+          </div>
+          <p className="text-muted-foreground">
+            Coming soon: Track visitor logs and manage parole records for inmates.
+          </p>
         </div>
+      </div>
+      
+      <div className="mt-12 text-center">
+        <p className="text-sm text-muted-foreground">
+          Prison Management System • Admin Mode • Version 1.0
+        </p>
       </div>
     </div>
   );
