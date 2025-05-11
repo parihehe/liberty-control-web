@@ -44,12 +44,6 @@ const Navbar = () => {
               );
             })}
           </div>
-          
-          <div className="flex items-center pr-4">
-            <div className="px-4 py-2 bg-primary text-primary-foreground rounded-md">
-              Admin
-            </div>
-          </div>
         </div>
       </div>
     </nav>

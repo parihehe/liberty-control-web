@@ -1,5 +1,5 @@
 
-import { Users, Lock, ClipboardCheck, UserCheck } from "lucide-react";
+import { Users, Lock, UserCheck } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Index = () => {
@@ -10,7 +10,7 @@ const Index = () => {
         <p className="text-muted-foreground mt-2">A comprehensive solution for prison administration</p>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Prisoners Module */}
         <Link to="/prisoners" className="block group">
           <div className="border rounded-lg p-6 h-full bg-white hover:border-primary transition-colors">
@@ -58,24 +58,11 @@ const Index = () => {
             </p>
           </div>
         </Link>
-        
-        {/* Visitors Module - Placeholder for future implementation */}
-        <div className="border rounded-lg p-6 h-full bg-white opacity-70">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="bg-muted p-3 rounded-full">
-              <ClipboardCheck className="h-6 w-6 text-muted-foreground" />
-            </div>
-            <h2 className="text-xl font-semibold text-muted-foreground">Visitor & Parole Records</h2>
-          </div>
-          <p className="text-muted-foreground">
-            Coming soon: Track visitor logs and manage parole records for inmates.
-          </p>
-        </div>
       </div>
       
       <div className="mt-12 text-center">
         <p className="text-sm text-muted-foreground">
-          Prison Management System • Admin Mode • Version 1.0
+          Prison Management System • Version 1.0
         </p>
       </div>
     </div>
