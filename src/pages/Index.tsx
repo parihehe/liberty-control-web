@@ -3,7 +3,7 @@ import { Users, Lock, AlertCircle, Clock } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import StatsCard from "@/components/dashboard/StatsCard";
 import RecentActivity from "@/components/dashboard/RecentActivity";
-import { DashboardStats } from "@/types";
+import { ActivityItem, DashboardStats } from "@/types";
 
 const Index = () => {
   // Mock data - in a real application, this would come from an API
@@ -14,7 +14,7 @@ const Index = () => {
     releasingThisMonth: 12
   };
 
-  const recentActivities = [
+  const recentActivities: ActivityItem[] = [
     {
       id: "1",
       description: "New prisoner John Doe admitted to Block A",
@@ -45,11 +45,12 @@ const Index = () => {
       type: "admission",
       timestamp: "3 days ago"
     }
-  ] as const;
+  ];
 
   return (
     <div className="page-container">
-      <h1 className="page-title">Dashboard</h1>
+      <h1 className="page-title">Prison Management System</h1>
+      <p className="text-muted-foreground mb-8">Welcome to the prison management dashboard</p>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <StatsCard 
@@ -77,21 +78,15 @@ const Index = () => {
         />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card className="col-span-1 lg:col-span-2">
+      <div className="mt-8">
+        <Card>
           <CardHeader>
-            <CardTitle>Prisoners by Block</CardTitle>
+            <CardTitle>Recent Activity</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-64 bg-muted/20 rounded-md flex items-center justify-center">
-              <p className="text-muted-foreground">Chart will be displayed here</p>
-            </div>
+            <RecentActivity activities={recentActivities} />
           </CardContent>
         </Card>
-        
-        <div className="col-span-1">
-          <RecentActivity activities={recentActivities} />
-        </div>
       </div>
     </div>
   );
