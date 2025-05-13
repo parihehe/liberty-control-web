@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -19,6 +19,8 @@ import CellTable from "@/components/cells/CellTable";
 import CellForm from "@/components/cells/CellForm";
 import { Cell } from "@/types";
 
+const STORAGE_KEY = 'prison_management_cells';
+
 const Cells = () => {
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState("");
@@ -27,8 +29,8 @@ const Cells = () => {
   const [selectedCell, setSelectedCell] = useState<Cell | undefined>(undefined);
   const [cellToDelete, setCellToDelete] = useState<string | null>(null);
   
-  // Mock data - in a real app, this would come from an API
-  const [cells, setCells] = useState<Cell[]>([
+  // Initial mock data - now used only if there's nothing in localStorage
+  const initialCells: Cell[] = [
     {
       id: "c1",
       cell_number: "101",
@@ -69,7 +71,29 @@ const Cells = () => {
       occupancy: 2,
       security_level: "minimum"
     }
-  ]);
+  ];
+  
+  const [cells, setCells] = useState<Cell[]>([]);
+  
+  // Load cells from localStorage on initial render
+  useEffect(() => {
+    const savedCells = localStorage.getItem(STORAGE_KEY);
+    if (savedCells) {
+      setCells(JSON.parse(savedCells));
+    } else {
+      // If no saved data, use initial mock data
+      setCells(initialCells);
+      // Also save initial data to localStorage
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(initialCells));
+    }
+  }, []);
+  
+  // Save cells to localStorage whenever they change
+  useEffect(() => {
+    if (cells.length > 0) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(cells));
+    }
+  }, [cells]);
   
   const filteredCells = cells.filter(cell => 
     cell.cell_number.toLowerCase().includes(searchTerm.toLowerCase()) || 
