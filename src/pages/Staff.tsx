@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -19,6 +18,8 @@ import StaffTable from "@/components/staff/StaffTable";
 import StaffForm from "@/components/staff/StaffForm";
 import { Staff } from "@/types";
 
+const STORAGE_KEY = 'prison_management_staff';
+
 const StaffPage = () => {
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState("");
@@ -27,8 +28,8 @@ const StaffPage = () => {
   const [selectedStaff, setSelectedStaff] = useState<Staff | undefined>(undefined);
   const [staffToDelete, setStaffToDelete] = useState<string | null>(null);
   
-  // Mock data - in a real app, this would come from an API
-  const [staff, setStaff] = useState<Staff[]>([
+  // Initial mock data - now used only if there's nothing in localStorage
+  const initialStaff: Staff[] = [
     {
       id: "1",
       employee_id: "E1001",
@@ -69,7 +70,29 @@ const StaffPage = () => {
       contact: "emily.wilson@prisonms.com",
       shift: "morning"
     }
-  ]);
+  ];
+  
+  const [staff, setStaff] = useState<Staff[]>([]);
+  
+  // Load staff from localStorage on initial render
+  useEffect(() => {
+    const savedStaff = localStorage.getItem(STORAGE_KEY);
+    if (savedStaff) {
+      setStaff(JSON.parse(savedStaff));
+    } else {
+      // If no saved data, use initial mock data
+      setStaff(initialStaff);
+      // Also save initial data to localStorage
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(initialStaff));
+    }
+  }, []);
+  
+  // Save staff to localStorage whenever they change
+  useEffect(() => {
+    if (staff.length > 0) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(staff));
+    }
+  }, [staff]);
   
   const filteredStaff = staff.filter(person => 
     person.employee_id.toLowerCase().includes(searchTerm.toLowerCase()) || 

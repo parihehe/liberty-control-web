@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -19,6 +18,9 @@ import PrisonerTable from "@/components/prisoners/PrisonerTable";
 import PrisonerForm from "@/components/prisoners/PrisonerForm";
 import { Prisoner, Cell } from "@/types";
 
+const STORAGE_KEY = 'prison_management_prisoners';
+const CELLS_STORAGE_KEY = 'prison_management_cells';
+
 const Prisoners = () => {
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState("");
@@ -27,8 +29,8 @@ const Prisoners = () => {
   const [selectedPrisoner, setSelectedPrisoner] = useState<Prisoner | undefined>(undefined);
   const [prisonerToDelete, setPrisonerToDelete] = useState<string | null>(null);
   
-  // Mock data - in a real app, this would come from an API
-  const [prisoners, setPrisoners] = useState<Prisoner[]>([
+  // Initial mock data - now used only if there's nothing in localStorage
+  const initialPrisoners: Prisoner[] = [
     {
       id: "1",
       inmate_id: "P10045",
@@ -65,15 +67,46 @@ const Prisoners = () => {
       status: "parole",
       cell_id: null
     }
-  ]);
-  
-  // Mock cells data
-  const cells: Cell[] = [
-    { id: "c1", cell_number: "101", block: "A", capacity: 2, occupancy: 1, security_level: "maximum" },
-    { id: "c2", cell_number: "102", block: "A", capacity: 2, occupancy: 2, security_level: "maximum" },
-    { id: "c3", cell_number: "201", block: "B", capacity: 1, occupancy: 0, security_level: "medium" },
-    { id: "c4", cell_number: "202", block: "B", capacity: 1, occupancy: 1, security_level: "medium" },
   ];
+  
+  const [prisoners, setPrisoners] = useState<Prisoner[]>([]);
+  const [cells, setCells] = useState<Cell[]>([]);
+  
+  // Load prisoners and cells from localStorage on initial render
+  useEffect(() => {
+    // Load prisoners data
+    const savedPrisoners = localStorage.getItem(STORAGE_KEY);
+    if (savedPrisoners) {
+      setPrisoners(JSON.parse(savedPrisoners));
+    } else {
+      // If no saved data, use initial mock data
+      setPrisoners(initialPrisoners);
+      // Also save initial data to localStorage
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(initialPrisoners));
+    }
+    
+    // Load cells data
+    const savedCells = localStorage.getItem(CELLS_STORAGE_KEY);
+    if (savedCells) {
+      setCells(JSON.parse(savedCells));
+    } else {
+      // Default cells if none are in localStorage (this is a fallback)
+      const defaultCells: Cell[] = [
+        { id: "c1", cell_number: "101", block: "A", capacity: 2, occupancy: 1, security_level: "maximum" },
+        { id: "c2", cell_number: "102", block: "A", capacity: 2, occupancy: 2, security_level: "maximum" },
+        { id: "c3", cell_number: "201", block: "B", capacity: 1, occupancy: 0, security_level: "medium" },
+        { id: "c4", cell_number: "202", block: "B", capacity: 1, occupancy: 1, security_level: "medium" },
+      ];
+      setCells(defaultCells);
+    }
+  }, []);
+  
+  // Save prisoners to localStorage whenever they change
+  useEffect(() => {
+    if (prisoners.length > 0) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(prisoners));
+    }
+  }, [prisoners]);
   
   const filteredPrisoners = prisoners.filter(prisoner => 
     prisoner.inmate_id.toLowerCase().includes(searchTerm.toLowerCase()) || 

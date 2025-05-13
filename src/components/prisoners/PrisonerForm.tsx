@@ -1,4 +1,3 @@
-
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -72,6 +71,10 @@ const PrisonerForm = ({ prisoner, cells, onSubmit, onCancel }: PrisonerFormProps
   }, [prisoner, form]);
 
   const handleSubmit = (data: Prisoner) => {
+    if (data.cell_id === "none") {
+      data.cell_id = null;
+    }
+    
     onSubmit({
       ...data,
       id: prisoner?.id || crypto.randomUUID(),
