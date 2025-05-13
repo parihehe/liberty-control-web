@@ -17,6 +17,7 @@ import { useToast } from "@/hooks/use-toast";
 import StaffTable from "@/components/staff/StaffTable";
 import StaffForm from "@/components/staff/StaffForm";
 import { Staff } from "@/types";
+import { getDataFromStorage, saveDataToStorage } from "@/utils/dataUtils";
 
 const STORAGE_KEY = 'prison_management_staff';
 
@@ -76,21 +77,14 @@ const StaffPage = () => {
   
   // Load staff from localStorage on initial render
   useEffect(() => {
-    const savedStaff = localStorage.getItem(STORAGE_KEY);
-    if (savedStaff) {
-      setStaff(JSON.parse(savedStaff));
-    } else {
-      // If no saved data, use initial mock data
-      setStaff(initialStaff);
-      // Also save initial data to localStorage
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(initialStaff));
-    }
+    const savedStaff = getDataFromStorage<Staff>(STORAGE_KEY, initialStaff);
+    setStaff(savedStaff);
   }, []);
   
   // Save staff to localStorage whenever they change
   useEffect(() => {
     if (staff.length > 0) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(staff));
+      saveDataToStorage(STORAGE_KEY, staff);
     }
   }, [staff]);
   

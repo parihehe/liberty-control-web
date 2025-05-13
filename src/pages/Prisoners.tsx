@@ -17,6 +17,7 @@ import { useToast } from "@/hooks/use-toast";
 import PrisonerTable from "@/components/prisoners/PrisonerTable";
 import PrisonerForm from "@/components/prisoners/PrisonerForm";
 import { Prisoner, Cell } from "@/types";
+import { getDataFromStorage, saveDataToStorage, updateCellOccupancy } from "@/utils/dataUtils";
 
 const STORAGE_KEY = 'prison_management_prisoners';
 const CELLS_STORAGE_KEY = 'prison_management_cells';
@@ -75,36 +76,26 @@ const Prisoners = () => {
   // Load prisoners and cells from localStorage on initial render
   useEffect(() => {
     // Load prisoners data
-    const savedPrisoners = localStorage.getItem(STORAGE_KEY);
-    if (savedPrisoners) {
-      setPrisoners(JSON.parse(savedPrisoners));
-    } else {
-      // If no saved data, use initial mock data
-      setPrisoners(initialPrisoners);
-      // Also save initial data to localStorage
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(initialPrisoners));
-    }
+    const savedPrisoners = getDataFromStorage<Prisoner>(STORAGE_KEY, initialPrisoners);
+    setPrisoners(savedPrisoners);
     
     // Load cells data
-    const savedCells = localStorage.getItem(CELLS_STORAGE_KEY);
-    if (savedCells) {
-      setCells(JSON.parse(savedCells));
-    } else {
-      // Default cells if none are in localStorage (this is a fallback)
-      const defaultCells: Cell[] = [
-        { id: "c1", cell_number: "101", block: "A", capacity: 2, occupancy: 1, security_level: "maximum" },
-        { id: "c2", cell_number: "102", block: "A", capacity: 2, occupancy: 2, security_level: "maximum" },
-        { id: "c3", cell_number: "201", block: "B", capacity: 1, occupancy: 0, security_level: "medium" },
-        { id: "c4", cell_number: "202", block: "B", capacity: 1, occupancy: 1, security_level: "medium" },
-      ];
-      setCells(defaultCells);
-    }
+    const defaultCells: Cell[] = [
+      { id: "c1", cell_number: "101", block: "A", capacity: 2, occupancy: 1, security_level: "maximum" },
+      { id: "c2", cell_number: "102", block: "A", capacity: 2, occupancy: 2, security_level: "maximum" },
+      { id: "c3", cell_number: "201", block: "B", capacity: 1, occupancy: 0, security_level: "medium" },
+      { id: "c4", cell_number: "202", block: "B", capacity: 1, occupancy: 1, security_level: "medium" },
+    ];
+    const savedCells = getDataFromStorage<Cell>(CELLS_STORAGE_KEY, defaultCells);
+    setCells(savedCells);
   }, []);
   
   // Save prisoners to localStorage whenever they change
   useEffect(() => {
     if (prisoners.length > 0) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(prisoners));
+      saveDataToStorage(STORAGE_KEY, prisoners);
+      // Update cell occupancy whenever prisoners data changes
+      updateCellOccupancy();
     }
   }, [prisoners]);
   

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -18,6 +17,7 @@ import { useToast } from "@/hooks/use-toast";
 import CellTable from "@/components/cells/CellTable";
 import CellForm from "@/components/cells/CellForm";
 import { Cell } from "@/types";
+import { getDataFromStorage, saveDataToStorage } from "@/utils/dataUtils";
 
 const STORAGE_KEY = 'prison_management_cells';
 
@@ -77,21 +77,14 @@ const Cells = () => {
   
   // Load cells from localStorage on initial render
   useEffect(() => {
-    const savedCells = localStorage.getItem(STORAGE_KEY);
-    if (savedCells) {
-      setCells(JSON.parse(savedCells));
-    } else {
-      // If no saved data, use initial mock data
-      setCells(initialCells);
-      // Also save initial data to localStorage
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(initialCells));
-    }
+    const savedCells = getDataFromStorage<Cell>(STORAGE_KEY, initialCells);
+    setCells(savedCells);
   }, []);
   
   // Save cells to localStorage whenever they change
   useEffect(() => {
     if (cells.length > 0) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(cells));
+      saveDataToStorage(STORAGE_KEY, cells);
     }
   }, [cells]);
   
